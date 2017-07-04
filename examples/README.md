@@ -48,17 +48,8 @@ const express = require('express')
 const low = require('lowdb')
 const fileAsync = require('lowdb/lib/storages/file-async')
 
-// Create server
 const app = express()
 
-// Start database using file-async storage
-// For ease of use, read is synchronous
-const db = low('db.json', {
-  storage: fileAsync
-})
-
-// Routes
-// GET /posts/:id
 app.get('/posts/:id', (req, res) => {
   const post = db.get('posts')
     .find({ id: req.params.id })
@@ -67,22 +58,27 @@ app.get('/posts/:id', (req, res) => {
   res.send(post)
 })
 
-// POST /posts
-app.post('/posts', (req, res) => {
-  db.get('posts')
+app.post('/posts', async (req, res) => {
+  const post = await db.get('posts')
     .push(req.body)
     .last()
     .assign({ id: Date.now() })
     .write()
-    .then(post => res.send(post))
+
+  res.send(post)
 })
 
-// Init
-db.defaults({ posts: [] })
-  .write()
-  .then(() => {
-    app.listen(3000, () => console.log('Server is listening')
+async function start() {
+  db = await low('db.json', {
+    storage: fileAsync
   })
+
+  await db.defaults({ posts: [] }).write()
+
+  app.listen(3000, () => console.log('Server is listening')  
+}
+
+start()
 ```
 
 Using ES7 `async/await` and [Babel](https://babeljs.io/), you can simplify the previous `POST` example above like this:

@@ -6,19 +6,17 @@ const fileAsync = require('../../src/storages/file-async')
 const obj = { a: 1 }
 
 test('file-async', t => {
+  t.plan(2)
+
   const filename = tempfile()
 
-  t.same(
-    fileAsync.read(filename),
-    {}
-  )
+  fileAsync.read(filename).then(obj => t.same(obj, {})).catch(t.end)
 
   fileAsync
     .write(filename, obj)
     .then(() => {
       const actual = fileAsync.read(filename)
       t.same(actual, obj)
-      t.end()
     })
     .catch(t.end)
 })

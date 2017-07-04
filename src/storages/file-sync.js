@@ -5,10 +5,11 @@ module.exports = {
   read: function fileSyncRead (source, deserialize = JSON.parse) {
     if (fs.existsSync(source)) {
       // Read database
-      const data = fs.readFileSync(source, 'utf-8').trim() || '{}'
+      const data = fs.readFileSync(source, 'utf-8')
+      const str = data.trim() || '{}'
 
       try {
-        return deserialize(data)
+        return deserialize(str)
       } catch (e) {
         if (e instanceof SyntaxError) {
           e.message = `Malformed JSON in file: ${source}\n${e.message}`
