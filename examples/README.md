@@ -69,10 +69,7 @@ app.post('/posts', async (req, res) => {
 })
 
 async function start() {
-  db = await low('db.json', {
-    storage: fileAsync
-  })
-
+  db = await low('db.json', { storage: fileAsync })
   await db.defaults({ posts: [] }).write()
 
   app.listen(3000, () => console.log('Server is listening')  
