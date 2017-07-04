@@ -81,20 +81,6 @@ async function start() {
 start()
 ```
 
-Using ES7 `async/await` and [Babel](https://babeljs.io/), you can simplify the previous `POST` example above like this:
-
-```js
-app.post('/posts', async (req, res) => {
-  const post = await db.get('posts')
-    .push(req.body)
-    .last()
-    .assign({ id: Date.now() })
-    .write()
-
-  res.send(post)
-})
-```
-
 ## In-memory
 
 In this mode, no storage is used. Everything is done in memory.
